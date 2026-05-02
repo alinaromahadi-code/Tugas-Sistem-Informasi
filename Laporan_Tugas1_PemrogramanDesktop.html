@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Laporan Tugas 1 — Pemrograman Berbasis Desktop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --ut-blue:#003a7c;
+    --ut-blue-light:#0a5fbd;
+    --ut-gold:#d4af37;
+    --ut-gold-light:#f7d774;
+    --ut-dark:#001f44;
+    --ink:#1a1a1a;
+    --paper:#fdfdfd;
+    --code-bg:#0f0f1e;
+    --code-text:#cdd6f4;
+    --grad-1:linear-gradient(135deg,#003a7c 0%,#0a5fbd 50%,#003a7c 100%);
+    --grad-gold:linear-gradient(135deg,#d4af37 0%,#f7d774 50%,#b8860b 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:#dde1ea;
+    font-family:'Inter',-apple-system,'Segoe UI',Arial,sans-serif;
+    color:var(--ink);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* PAGE LAYOUT (A4) */
+  .page{
+    width:210mm;
+    min-height:297mm;
+    margin:18px auto;
+    background:var(--paper);
+    box-shadow:0 12px 50px rgba(0,30,80,.18), 0 4px 12px rgba(0,0,0,.08);
+    padding:22mm 22mm 28mm;
+    position:relative;
+    overflow:hidden;
+    page-break-after:always;
+    border-radius:2px;
+  }
+
+  /* ============ COVER ============ */
+  .cover{
+    text-align:center;
+    background:
+      radial-gradient(ellipse at top, rgba(212,175,55,.08) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(0,58,124,.08) 0%, transparent 60%),
+      linear-gradient(180deg,#fff 0%,#fafbff 100%);
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .cover-inner{
+    padding:18mm 18mm 14mm;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex:1;
+  }
+
+  /* Decorative top/bottom borders */
+  .cover::before{
+    content:"";
+    position:absolute;top:0;left:0;right:0;height:14mm;
+    background:var(--grad-1);
+    clip-path:polygon(0 0,100% 0,100% 60%,50% 100%,0 60%);
+  }
+  .cover::after{
+    content:"";
+    position:absolute;bottom:0;left:0;right:0;height:14mm;
+    background:var(--grad-1);
+    clip-path:polygon(0 40%,50% 0,100% 40%,100% 100%,0 100%);
+  }
+
+  /* Floating ornaments */
+  .ornament{
+    position:absolute;
+    pointer-events:none;
+    opacity:.06;
+    color:var(--ut-blue);
+    font-size:120pt;
+  }
+  .ornament.tl{top:25mm;left:8mm;transform:rotate(-15deg)}
+  .ornament.br{bottom:30mm;right:8mm;transform:rotate(15deg)}
+  .ornament.tr{top:30mm;right:10mm;font-size:60pt;color:var(--ut-gold)}
+  .ornament.bl{bottom:35mm;left:10mm;font-size:60pt;color:var(--ut-gold)}
+
+  .cover-tag{
+    margin-top:8mm;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--grad-gold);
+    color:var(--ut-dark);
+    padding:2.5mm 7mm;
+    border-radius:30px;
+    font-size:9pt;
+    font-weight:700;
+    letter-spacing:3px;
+    box-shadow:0 4px 12px rgba(212,175,55,.4);
+    animation:fadeDown 1s ease;
+  }
+
+  .cover h1{
+    font-family:'Playfair Display',serif;
+    font-size:48pt;
+    font-weight:900;
+    color:var(--ut-dark);
+    margin-top:6mm;
+    letter-spacing:8px;
+    line-height:1;
+    text-shadow:2px 2px 4px rgba(0,31,68,.1);
+    animation:fadeIn 1.2s ease .2s both;
+  }
+
+  .cover h2{
+    font-family:'Playfair Display',serif;
+    font-size:18pt;
+    color:var(--ut-blue);
+    margin-top:5mm;
+    letter-spacing:3px;
+    font-weight:600;
+    animation:fadeIn 1.2s ease .4s both;
+  }
+
+  .cover .underline{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin:6mm auto 8mm;
+    animation:fadeIn 1.2s ease .6s both;
+  }
+  .cover .underline .line{
+    width:30mm;height:2px;
+    background:linear-gradient(90deg,transparent,var(--ut-gold));
+  }
+  .cover .underline .line.r{background:linear-gradient(90deg,var(--ut-gold),transparent)}
+  .cover .underline i{
+    color:var(--ut-gold);
+    font-size:14pt;
+    animation:spin 4s linear infinite;
+  }
+
+  /* UT LOGO */
+  .ut-logo-wrap{
+    width:48mm;height:48mm;
+    margin:4mm auto 6mm;
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+    animation:floatLogo 3s ease-in-out infinite, fadeIn 1.2s ease .8s both;
+  }
+  .ut-logo-wrap::before{
+    content:"";
+    position:absolute;inset:-6mm;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(212,175,55,.25) 0%,transparent 70%);
+    z-index:0;
+  }
+  .ut-logo-wrap img{
+    width:100%;height:100%;
+    object-fit:contain;
+    position:relative;z-index:1;
+    filter:drop-shadow(0 6px 14px rgba(0,31,68,.25));
+  }
+
+  .judul-mk{
+    font-family:'Inter',sans-serif;
+    font-size:10pt;
+    color:#666;
+    letter-spacing:4px;
+    font-weight:500;
+    margin-bottom:6mm;
+    text-transform:uppercase;
+    animation:fadeIn 1.2s ease 1s both;
+  }
+
+  /* IDENTITAS CARD */
+  .identitas{
+    margin-top:4mm;
+    padding:9mm 10mm;
+    background:linear-gradient(135deg,#ffffff 0%,#f8faff 100%);
+    border-radius:14px;
+    width:155mm;
+    text-align:left;
+    box-shadow:
+      0 10px 30px rgba(0,58,124,.12),
+      0 0 0 1px rgba(212,175,55,.3);
+    position:relative;
+    animation:fadeUp 1s ease 1.2s both;
+  }
+  .identitas::before{
+    content:"";
+    position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;
+    background:var(--grad-gold);
+    border-radius:14px;
+    z-index:-1;
+  }
+  .identitas .judul{
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    font-size:13pt;
+    color:var(--ut-blue);
+    padding-bottom:3mm;
+    margin-bottom:5mm;
+    font-weight:700;
+    letter-spacing:2px;
+    border-bottom:2px solid;
+    border-image:linear-gradient(90deg,transparent,var(--ut-gold),transparent) 1;
+    text-transform:uppercase;
+  }
+  .identitas .judul i{margin-right:6px;color:var(--ut-gold)}
+
+  .identitas .row{
+    display:grid;
+    grid-template-columns:42mm 1fr;
+    gap:5mm;
+    align-items:center;
+    margin:3mm 0;
+    font-size:11pt;
+    padding:1.5mm 3mm;
+    border-radius:6px;
+    transition:background .3s;
+  }
+  .identitas .row:hover{background:rgba(0,58,124,.04)}
+  .identitas .row .label{
+    font-weight:600;
+    color:var(--ut-dark);
+    font-size:10pt;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    display:flex;align-items:center;gap:8px;
+  }
+  .identitas .row .label i{color:var(--ut-gold);width:18px;text-align:center}
+  .identitas .row .val{
+    font-weight:700;
+    color:#1a1a1a;
+    font-size:12pt;
+    border-left:3px solid var(--ut-gold);
+    padding-left:5mm;
+  }
+
+  .footer-cover{
+    margin-top:7mm;
+    text-align:center;
+    font-family:'Playfair Display',serif;
+    color:var(--ut-dark);
+    font-weight:700;
+    line-height:1.7;
+    animation:fadeUp 1s ease 1.4s both;
+  }
+  .footer-cover .prodi{font-size:13pt;letter-spacing:2px}
+  .footer-cover .fakultas{font-size:13pt;color:var(--ut-blue);margin-top:1mm}
+  .footer-cover .ut{
+    font-size:18pt;
+    background:var(--grad-1);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-top:2mm;
+    letter-spacing:6px;
+  }
+  .footer-cover .layanan{
+    color:var(--ut-blue);
+    font-style:italic;
+    font-size:12pt;
+    margin-top:2mm;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+  }
+  .footer-cover .tahun{
+    margin-top:5mm;
+    display:inline-block;
+    padding:2mm 8mm;
+    background:var(--grad-1);
+    color:#fff;
+    border-radius:30px;
+    font-size:13pt;
+    font-family:'Inter',sans-serif;
+    letter-spacing:5px;
+    font-weight:800;
+    box-shadow:0 4px 12px rgba(0,58,124,.3);
+  }
+
+  /* ============ CONTENT PAGES ============ */
+  .page-header{
+    background:var(--grad-1);
+    margin:-22mm -22mm 8mm;
+    padding:8mm 22mm;
+    color:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .page-header::after{
+    content:"";
+    position:absolute;
+    bottom:0;left:0;right:0;
+    height:3px;
+    background:var(--grad-gold);
+  }
+  .page-header h2{
+    font-family:'Playfair Display',serif;
+    font-size:18pt;
+    letter-spacing:1px;
+    font-weight:700;
+    display:flex;align-items:center;gap:12px;
+  }
+  .page-header h2 i{color:var(--ut-gold-light)}
+  .page-header .badge{
+    background:rgba(255,255,255,.18);
+    backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.3);
+    padding:2.5mm 6mm;
+    border-radius:30px;
+    font-size:9pt;
+    font-weight:700;
+    letter-spacing:2px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .page-header .badge i{color:var(--ut-gold-light)}
+
+  .section-title{
+    color:var(--ut-blue);
+    font-family:'Playfair Display',serif;
+    font-size:14pt;
+    margin:6mm 0 4mm;
+    padding-left:5mm;
+    border-left:5px solid var(--ut-gold);
+    font-weight:700;
+    display:flex;align-items:center;gap:10px;
+  }
+  .section-title i{color:var(--ut-gold)}
+
+  .desc{
+    text-align:justify;
+    font-size:11pt;
+    color:#3a3a3a;
+    margin-bottom:4mm;
+    line-height:1.7;
+  }
+  .desc strong{color:var(--ut-blue)}
+
+  /* FEATURE GRID */
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:4mm;
+    margin:4mm 0;
+  }
+  .feat{
+    padding:4mm 5mm;
+    background:linear-gradient(135deg,#f4f7fc 0%,#fff 100%);
+    border-radius:8px;
+    border-left:4px solid var(--ut-gold);
+    font-size:10pt;
+    display:flex;align-items:center;gap:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,.04);
+  }
+  .feat i{
+    color:var(--ut-blue);
+    font-size:14pt;
+    width:20px;text-align:center;
+  }
+
+  /* CODE BLOCK */
+  pre.code{
+    background:var(--code-bg);
+    color:var(--code-text);
+    padding:6mm 5mm 6mm 14mm;
+    border-radius:10px;
+    font-family:'JetBrains Mono','Consolas',monospace;
+    font-size:8.2pt;
+    line-height:1.55;
+    overflow:auto;
+    box-shadow:
+      inset 0 0 0 1px #313244,
+      0 8px 20px rgba(0,0,0,.15);
+    position:relative;
+    white-space:pre;
+    margin-top:3mm;
+  }
+  pre.code::before{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;height:8mm;
+    background:linear-gradient(180deg,#181828 0%,transparent 100%);
+    border-radius:10px 10px 0 0;
+    pointer-events:none;
+  }
+  pre.code .ln{
+    display:inline-block;
+    width:7mm;
+    margin-left:-10mm;
+    padding-right:3mm;
+    text-align:right;
+    color:#6c7086;
+    border-right:1px solid #45475a;
+    user-select:none;
+  }
+  .kw{color:#cba6f7;font-weight:600}
+  .ty{color:#f9e2af}
+  .st{color:#a6e3a1}
+  .cm{color:#7f849c;font-style:italic}
+  .nm{color:#fab387}
+  .fn{color:#89b4fa}
+
+  .code-window{
+    position:relative;
+    margin-top:4mm;
+  }
+  .code-window-bar{
+    background:#1a1a2e;
+    border-radius:10px 10px 0 0;
+    padding:3mm 5mm;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border-bottom:1px solid #313244;
+  }
+  .code-window-bar .dot{
+    width:11px;height:11px;border-radius:50%;
+    display:inline-block;
+  }
+  .dot.r{background:#ff5f57}
+  .dot.y{background:#febc2e}
+  .dot.g{background:#28c840}
+  .code-window-bar .file{
+    margin-left:auto;
+    color:#a6adc8;
+    font-family:'JetBrains Mono',monospace;
+    font-size:9pt;
+    display:flex;align-items:center;gap:6px;
+  }
+  .code-window-bar .file i{color:#f9e2af}
+  .code-window pre.code{
+    margin-top:0;
+    border-radius:0 0 10px 10px;
+  }
+  .code-window pre.code::before{display:none}
+
+  /* CONSOLE OUTPUT */
+  .terminal{
+    background:#0c0c0c;
+    border-radius:10px;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+    overflow:hidden;
+    margin-top:3mm;
+  }
+  .terminal-bar{
+    background:#1a1a1a;
+    padding:3mm 5mm;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border-bottom:1px solid #2a2a2a;
+  }
+  .terminal-bar .file{
+    margin-left:auto;
+    color:#888;
+    font-family:'JetBrains Mono',monospace;
+    font-size:9pt;
+    display:flex;align-items:center;gap:6px;
+  }
+  pre.output{
+    background:#0c0c0c;
+    color:#e6e6e6;
+    padding:6mm;
+    font-family:'JetBrains Mono','Consolas',monospace;
+    font-size:8.2pt;
+    line-height:1.5;
+    white-space:pre;
+    overflow:auto;
+    margin:0;
+  }
+  .out-input{color:#7afda7;font-weight:600}
+  .out-h{color:#5dade2}
+  .out-y{color:#ffd866}
+  .out-g{color:#a6e3a1}
+
+  /* YOUTUBE BUTTON */
+  .yt-section{
+    margin-top:8mm;
+    text-align:center;
+    padding:9mm 8mm;
+    background:linear-gradient(135deg,#fff5f5 0%,#fff 50%,#fff5f5 100%);
+    border-radius:14px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 6px 20px rgba(255,0,0,.08);
+  }
+  .yt-section::before{
+    content:"";
+    position:absolute;
+    top:-50%;left:-50%;
+    width:200%;height:200%;
+    background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,0,0,.03) 20px,rgba(255,0,0,.03) 21px);
+    pointer-events:none;
+  }
+  .yt-section h3{
+    color:#cc0000;
+    font-family:'Playfair Display',serif;
+    margin-bottom:3mm;
+    font-size:15pt;
+    font-weight:800;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    position:relative;
+  }
+  .yt-section h3 i{
+    color:#ff0000;
+    animation:pulse 1.5s infinite;
+  }
+  .yt-section .sub{
+    color:#666;font-size:10.5pt;margin-bottom:5mm;
+    position:relative;
+  }
+  .yt-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    background:linear-gradient(135deg,#ff0000 0%,#cc0000 100%);
+    color:#fff !important;
+    text-decoration:none;
+    padding:4.5mm 10mm;
+    border-radius:50px;
+    font-weight:700;
+    font-size:13pt;
+    letter-spacing:0.5px;
+    box-shadow:
+      0 8px 22px rgba(255,0,0,.4),
+      inset 0 1px 0 rgba(255,255,255,.2);
+    transition:all .3s;
+    position:relative;
+    z-index:1;
+    font-family:'Inter',sans-serif;
+  }
+  .yt-btn:hover{
+    transform:translateY(-3px) scale(1.03);
+    box-shadow:
+      0 14px 32px rgba(255,0,0,.55),
+      inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .yt-btn::before{
+    content:"";
+    position:absolute;inset:-2px;
+    border-radius:50px;
+    background:linear-gradient(135deg,#ff0000,#ff6b6b,#ff0000);
+    z-index:-1;
+    opacity:0;
+    transition:opacity .3s;
+    filter:blur(8px);
+  }
+  .yt-btn:hover::before{opacity:.7}
+  .yt-btn i{font-size:18pt}
+  .yt-url{
+    margin-top:4mm;
+    font-size:9pt;
+    color:#777;
+    word-break:break-all;
+    position:relative;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .yt-url a{color:var(--ut-blue);text-decoration:none;font-weight:600}
+  .yt-url a:hover{text-decoration:underline}
+
+  /* PAGE FOOTER */
+  .page-footer{
+    position:absolute;
+    bottom:8mm;left:22mm;right:22mm;
+    border-top:2px solid;
+    border-image:linear-gradient(90deg,var(--ut-blue),var(--ut-gold),var(--ut-blue)) 1;
+    padding-top:3mm;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:9pt;color:#777;
+    font-family:'Inter',sans-serif;
+  }
+  .page-footer .left{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--ut-blue)}
+  .page-footer .left i{color:var(--ut-gold)}
+  .page-footer .right{font-weight:500}
+  .page-footer .right .pn{
+    background:var(--ut-blue);color:#fff;
+    padding:1mm 4mm;border-radius:20px;
+    margin-left:5px;font-weight:700;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes floatLogo{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-6px)}
+  }
+  @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes pulse{
+    0%,100%{transform:scale(1);opacity:1}
+    50%{transform:scale(1.15);opacity:.7}
+  }
+
+  /* PRINT */
+  @media print{
+    body{background:#fff}
+    .page{margin:0;box-shadow:none;page-break-after:always;border-radius:0}
+    .yt-btn{box-shadow:none}
+    .ut-logo-wrap{animation:none}
+    .yt-section h3 i{animation:none}
+    .cover .underline i{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HALAMAN 1 : COVER ============ -->
+<section class="page cover">
+  <i class="fa-solid fa-code ornament tl"></i>
+  <i class="fa-solid fa-laptop-code ornament br"></i>
+  <i class="fa-solid fa-microchip ornament tr"></i>
+  <i class="fa-solid fa-terminal ornament bl"></i>
+
+  <div class="cover-inner">
+
+    <div class="cover-tag" style="margin-top:14mm">
+      <i class="fa-solid fa-graduation-cap"></i>
+      LAPORAN TUGAS AKADEMIK
+    </div>
+
+    <h1>TUGAS 1</h1>
+    <h2>PEMROGRAMAN BERBASIS DESKTOP</h2>
+
+    <div class="underline">
+      <span class="line"></span>
+      <i class="fa-solid fa-star-of-life"></i>
+      <span class="line r"></span>
+    </div>
+
+    <div class="ut-logo-wrap">
+      <img src="logo_ut.png" alt="Logo Universitas Terbuka">
+    </div>
+
+    <div class="judul-mk">
+      <i class="fa-solid fa-book-open" style="margin-right:8px;color:var(--ut-gold)"></i>
+      Mata Kuliah · Pemrograman Berbasis Desktop
+    </div>
+
+    <div class="identitas">
+      <div class="judul"><i class="fa-solid fa-id-card"></i>DISUSUN OLEH</div>
+      <div class="row"><span class="label"><i class="fa-solid fa-user"></i>Nama</span><span class="val">ALINA</span></div>
+      <div class="row"><span class="label"><i class="fa-solid fa-fingerprint"></i>NIM</span><span class="val">055007898</span></div>
+      <div class="row"><span class="label"><i class="fa-solid fa-hashtag"></i>Kode Kelas</span><span class="val">29</span></div>
+      <div class="row"><span class="label"><i class="fa-solid fa-laptop"></i>Program Studi</span><span class="val">Sistem Informasi</span></div>
+      <div class="row"><span class="label"><i class="fa-solid fa-flask"></i>Fakultas</span><span class="val">Sains dan Teknologi</span></div>
+    </div>
+
+    <div class="footer-cover">
+      <div class="prodi">PROGRAM STUDI SISTEM INFORMASI</div>
+      <div class="fakultas">FAKULTAS SAINS DAN TEKNOLOGI</div>
+      <div class="ut">UNIVERSITAS TERBUKA</div>
+      <div class="layanan"><i class="fa-solid fa-globe" style="margin-right:6px"></i>Layanan Luar Negeri</div>
+      <div class="tahun">2026</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============ HALAMAN 2 : DESKRIPSI & SOURCE CODE ============ -->
+<section class="page">
+  <div class="page-header">
+    <h2><i class="fa-brands fa-java"></i>Source Code · Tugas1.java</h2>
+    <span class="badge"><i class="fa-solid fa-code"></i>JAVA SE</span>
+  </div>
+
+  <div class="section-title"><i class="fa-solid fa-circle-info"></i>Deskripsi Program</div>
+  <p class="desc">
+    Program <strong>Tugas1.java</strong> adalah aplikasi konsol sederhana yang mensimulasikan
+    sistem pemesanan menu pada sebuah restoran. Pengguna dapat memilih hingga 4 menu dari
+    kategori <em>Makanan</em> dan <em>Minuman</em>, lalu sistem akan mencetak struk pesanan
+    lengkap dengan perhitungan pajak 10%, biaya pelayanan, diskon (jika total &gt; Rp 100.000),
+    serta promo Beli 1 Gratis 1 minuman (jika total &gt; Rp 50.000).
+    Program ini menerapkan konsep <strong>array, method, struktur keputusan,</strong> dan
+    <strong>input/output Scanner</strong> sebagaimana dipelajari pada Sesi 1–5 mata kuliah
+    Pemrograman Berbasis Desktop.
+  </p>
+
+  <div class="feature-grid">
+    <div class="feat"><i class="fa-solid fa-list-ul"></i>Array data menu &amp; pesanan</div>
+    <div class="feat"><i class="fa-solid fa-keyboard"></i>Input via Scanner</div>
+    <div class="feat"><i class="fa-solid fa-code-branch"></i>Struktur keputusan if/else</div>
+    <div class="feat"><i class="fa-solid fa-percent"></i>Pajak 10% &amp; diskon otomatis</div>
+    <div class="feat"><i class="fa-solid fa-gift"></i>Promo Beli 1 Gratis 1</div>
+    <div class="feat"><i class="fa-solid fa-receipt"></i>Cetak struk terformat</div>
+  </div>
+
+  <div class="section-title"><i class="fa-solid fa-file-code"></i>Source Code</div>
+
+  <div class="code-window">
+    <div class="code-window-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="file"><i class="fa-brands fa-java"></i>Tugas1.java</span>
+    </div>
+<pre class="code"><span class="ln">1</span><span class="kw">import</span> java.util.Scanner;
+<span class="ln">2</span>
+<span class="ln">3</span><span class="kw">public class</span> <span class="ty">Tugas1</span> {
+<span class="ln">4</span>
+<span class="ln">5</span>    <span class="cm">// Data Menu per Kategori</span>
+<span class="ln">6</span>    <span class="kw">static</span> <span class="ty">String</span>[] namaMakanan = {<span class="st">"Nasi Pecel"</span>, <span class="st">"Soto Ayam"</span>, <span class="st">"Soto Daging"</span>, <span class="st">"Ayam Bakar"</span>};
+<span class="ln">7</span>    <span class="kw">static</span> <span class="ty">int</span>[] hargaMakanan = {<span class="nm">15000</span>, <span class="nm">20000</span>, <span class="nm">25000</span>, <span class="nm">25000</span>};
+<span class="ln">8</span>
+<span class="ln">9</span>    <span class="kw">static</span> <span class="ty">String</span>[] namaMinuman = {<span class="st">"Air Mineral"</span>, <span class="st">"Teh Panas"</span>, <span class="st">"Kopi"</span>, <span class="st">"Es Teh Manis"</span>};
+<span class="ln">10</span>    <span class="kw">static</span> <span class="ty">int</span>[] hargaMinuman = {<span class="nm">5000</span>, <span class="nm">6000</span>, <span class="nm">8000</span>, <span class="nm">8000</span>};
+<span class="ln">11</span>
+<span class="ln">12</span>    <span class="cm">// Array Penampung Pesanan (max 4)</span>
+<span class="ln">13</span>    <span class="kw">static</span> <span class="ty">String</span>[] pesananNama = <span class="kw">new</span> <span class="ty">String</span>[<span class="nm">4</span>];
+<span class="ln">14</span>    <span class="kw">static</span> <span class="ty">int</span>[] pesananHarga = <span class="kw">new</span> <span class="ty">int</span>[<span class="nm">4</span>];
+<span class="ln">15</span>    <span class="kw">static</span> <span class="ty">int</span>[] pesananJumlah = <span class="kw">new</span> <span class="ty">int</span>[<span class="nm">4</span>];
+<span class="ln">16</span>    <span class="kw">static</span> <span class="ty">String</span>[] pesananKategori = <span class="kw">new</span> <span class="ty">String</span>[<span class="nm">4</span>];
+<span class="ln">17</span>
+<span class="ln">18</span>    <span class="kw">static</span> <span class="ty">int</span> jumlahPesanan = <span class="nm">0</span>;
+<span class="ln">19</span>
+<span class="ln">20</span>    <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+<span class="ln">21</span>        <span class="ty">Scanner</span> sc = <span class="kw">new</span> <span class="ty">Scanner</span>(System.in);
+<span class="ln">22</span>        jumlahPesanan = <span class="nm">0</span>;
+<span class="ln">23</span>        <span class="fn">tampilkanMenu</span>();
+<span class="ln">24</span>        System.out.println();
+<span class="ln">25</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">26</span>        System.out.println(<span class="st">"            INPUT PESANAN (Maksimal 4 Menu)              "</span>);
+<span class="ln">27</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">28</span>        System.out.println(<span class="st">"Ketik 0 pada nomor menu jika ingin melewati slot pesanan."</span>);
+<span class="ln">29</span>        System.out.println();
+<span class="ln">30</span>        <span class="fn">inputPesanan</span>(sc, <span class="nm">1</span>);
+<span class="ln">31</span>        <span class="fn">inputPesanan</span>(sc, <span class="nm">2</span>);
+<span class="ln">32</span>        <span class="fn">inputPesanan</span>(sc, <span class="nm">3</span>);
+<span class="ln">33</span>        <span class="fn">inputPesanan</span>(sc, <span class="nm">4</span>);
+<span class="ln">34</span>        <span class="fn">cetakStruk</span>();
+<span class="ln">35</span>        sc.<span class="fn">close</span>();
+<span class="ln">36</span>    }
+<span class="ln">37</span>
+<span class="ln">38</span>    <span class="kw">static void</span> <span class="fn">tampilkanMenu</span>() {
+<span class="ln">39</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">40</span>        System.out.println(<span class="st">"              DAFTAR MENU RESTORAN SEDERHANA             "</span>);
+<span class="ln">41</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">42</span>        System.out.println(<span class="st">"&gt;&gt; KATEGORI MAKANAN &lt;&lt;"</span>);
+<span class="ln">43</span>        System.out.println(<span class="st">"  1. "</span> + <span class="fn">padKanan</span>(namaMakanan[<span class="nm">0</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMakanan[<span class="nm">0</span>]);
+<span class="ln">44</span>        System.out.println(<span class="st">"  2. "</span> + <span class="fn">padKanan</span>(namaMakanan[<span class="nm">1</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMakanan[<span class="nm">1</span>]);
+<span class="ln">45</span>        System.out.println(<span class="st">"  3. "</span> + <span class="fn">padKanan</span>(namaMakanan[<span class="nm">2</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMakanan[<span class="nm">2</span>]);
+<span class="ln">46</span>        System.out.println(<span class="st">"  4. "</span> + <span class="fn">padKanan</span>(namaMakanan[<span class="nm">3</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMakanan[<span class="nm">3</span>]);
+<span class="ln">47</span>        System.out.println();
+<span class="ln">48</span>        System.out.println(<span class="st">"&gt;&gt; KATEGORI MINUMAN &lt;&lt;"</span>);
+<span class="ln">49</span>        System.out.println(<span class="st">"  5. "</span> + <span class="fn">padKanan</span>(namaMinuman[<span class="nm">0</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMinuman[<span class="nm">0</span>]);
+<span class="ln">50</span>        System.out.println(<span class="st">"  6. "</span> + <span class="fn">padKanan</span>(namaMinuman[<span class="nm">1</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMinuman[<span class="nm">1</span>]);
+<span class="ln">51</span>        System.out.println(<span class="st">"  7. "</span> + <span class="fn">padKanan</span>(namaMinuman[<span class="nm">2</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMinuman[<span class="nm">2</span>]);
+<span class="ln">52</span>        System.out.println(<span class="st">"  8. "</span> + <span class="fn">padKanan</span>(namaMinuman[<span class="nm">3</span>], <span class="nm">18</span>) + <span class="st">" Rp "</span> + hargaMinuman[<span class="nm">3</span>]);
+<span class="ln">53</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">54</span>    }
+<span class="ln">55</span>
+<span class="ln">56</span>    <span class="kw">static void</span> <span class="fn">inputPesanan</span>(<span class="ty">Scanner</span> sc, <span class="ty">int</span> slot) {
+<span class="ln">57</span>        System.out.print(<span class="st">"Pesanan ke-"</span> + slot + <span class="st">" | Pilih nomor menu (1-8, 0=lewati): "</span>);
+<span class="ln">58</span>        <span class="ty">int</span> pilih = sc.<span class="fn">nextInt</span>();
+<span class="ln">59</span>        <span class="kw">if</span> (pilih == <span class="nm">0</span>) {
+<span class="ln">60</span>            System.out.println(<span class="st">"  -&gt; Slot dilewati."</span>);
+<span class="ln">61</span>            <span class="kw">return</span>;
+<span class="ln">62</span>        }
+<span class="ln">63</span>        <span class="kw">if</span> (pilih &lt; <span class="nm">1</span> || pilih &gt; <span class="nm">8</span>) {
+<span class="ln">64</span>            System.out.println(<span class="st">"  -&gt; Pilihan tidak valid, slot dilewati."</span>);
+<span class="ln">65</span>            <span class="kw">return</span>;
+<span class="ln">66</span>        }
+<span class="ln">67</span>        System.out.print(<span class="st">"Pesanan ke-"</span> + slot + <span class="st">" | Masukkan jumlah         : "</span>);
+<span class="ln">68</span>        <span class="ty">int</span> jml = sc.<span class="fn">nextInt</span>();
+<span class="ln">69</span>        <span class="kw">if</span> (jml &lt;= <span class="nm">0</span>) {
+<span class="ln">70</span>            System.out.println(<span class="st">"  -&gt; Jumlah tidak valid, slot dilewati."</span>);
+<span class="ln">71</span>            <span class="kw">return</span>;
+<span class="ln">72</span>        }
+<span class="ln">73</span>        <span class="ty">String</span> nama; <span class="ty">String</span> kategori; <span class="ty">int</span> harga;
+<span class="ln">74</span>        <span class="kw">if</span> (pilih &lt;= <span class="nm">4</span>) {
+<span class="ln">75</span>            nama = namaMakanan[pilih - <span class="nm">1</span>];
+<span class="ln">76</span>            harga = hargaMakanan[pilih - <span class="nm">1</span>];
+<span class="ln">77</span>            kategori = <span class="st">"Makanan"</span>;
+<span class="ln">78</span>        } <span class="kw">else</span> {
+<span class="ln">79</span>            nama = namaMinuman[pilih - <span class="nm">5</span>];
+<span class="ln">80</span>            harga = hargaMinuman[pilih - <span class="nm">5</span>];
+<span class="ln">81</span>            kategori = <span class="st">"Minuman"</span>;
+<span class="ln">82</span>        }
+<span class="ln">83</span>        pesananNama[jumlahPesanan] = nama;
+<span class="ln">84</span>        pesananHarga[jumlahPesanan] = harga;
+<span class="ln">85</span>        pesananJumlah[jumlahPesanan] = jml;
+<span class="ln">86</span>        pesananKategori[jumlahPesanan] = kategori;
+<span class="ln">87</span>        jumlahPesanan++;
+<span class="ln">88</span>    }
+</pre>
+  </div>
+
+  <div class="page-footer">
+    <span class="left"><i class="fa-solid fa-graduation-cap"></i>Tugas 1 — Pemrograman Berbasis Desktop</span>
+    <span class="right">ALINA · 055007898 <span class="pn">02</span></span>
+  </div>
+</section>
+
+
+<!-- ============ HALAMAN 3 : LANJUTAN CODE ============ -->
+<section class="page">
+  <div class="page-header">
+    <h2><i class="fa-solid fa-file-lines"></i>Source Code (Lanjutan)</h2>
+    <span class="badge"><i class="fa-solid fa-receipt"></i>METHOD: cetakStruk</span>
+  </div>
+
+  <div class="code-window">
+    <div class="code-window-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="file"><i class="fa-brands fa-java"></i>Tugas1.java · cetakStruk()</span>
+    </div>
+<pre class="code"><span class="ln">89</span>    <span class="kw">static void</span> <span class="fn">cetakStruk</span>() {
+<span class="ln">90</span>        System.out.println();
+<span class="ln">91</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">92</span>        System.out.println(<span class="st">"                 STRUK PESANAN RESTORAN                  "</span>);
+<span class="ln">93</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">94</span>
+<span class="ln">95</span>        <span class="kw">if</span> (jumlahPesanan == <span class="nm">0</span>) {
+<span class="ln">96</span>            System.out.println(<span class="st">"Tidak ada pesanan yang dilakukan. Terima kasih!"</span>);
+<span class="ln">97</span>            System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">98</span>            <span class="kw">return</span>;
+<span class="ln">99</span>        }
+<span class="ln">100</span>
+<span class="ln">101</span>        System.out.println(<span class="fn">padKanan</span>(<span class="st">"Menu"</span>, <span class="nm">16</span>) + <span class="fn">padKanan</span>(<span class="st">"Qty"</span>, <span class="nm">6</span>) +
+<span class="ln">102</span>                <span class="fn">padKanan</span>(<span class="st">"Harga"</span>, <span class="nm">12</span>) + <span class="st">"Subtotal"</span>);
+<span class="ln">103</span>        System.out.println(<span class="st">"---------------------------------------------------------"</span>);
+<span class="ln">104</span>
+<span class="ln">105</span>        <span class="ty">int</span> total = <span class="nm">0</span>;
+<span class="ln">106</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">1</span>) total += <span class="fn">cetakBaris</span>(<span class="nm">0</span>);
+<span class="ln">107</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">2</span>) total += <span class="fn">cetakBaris</span>(<span class="nm">1</span>);
+<span class="ln">108</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">3</span>) total += <span class="fn">cetakBaris</span>(<span class="nm">2</span>);
+<span class="ln">109</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">4</span>) total += <span class="fn">cetakBaris</span>(<span class="nm">3</span>);
+<span class="ln">110</span>
+<span class="ln">111</span>        System.out.println(<span class="st">"---------------------------------------------------------"</span>);
+<span class="ln">112</span>        System.out.println(<span class="fn">padKanan</span>(<span class="st">"Total Biaya Pesanan"</span>, <span class="nm">34</span>) + <span class="st">": Rp "</span> + total);
+<span class="ln">113</span>
+<span class="ln">114</span>        <span class="ty">int</span> pajak = (<span class="ty">int</span>) Math.<span class="fn">round</span>(total * <span class="nm">0.10</span>);
+<span class="ln">115</span>        <span class="ty">int</span> layanan = <span class="nm">20000</span>;
+<span class="ln">116</span>        <span class="ty">int</span> subtotal = total + pajak + layanan;
+<span class="ln">117</span>
+<span class="ln">118</span>        System.out.println(<span class="fn">padKanan</span>(<span class="st">"Pajak (10%)"</span>, <span class="nm">34</span>) + <span class="st">": Rp "</span> + pajak);
+<span class="ln">119</span>        System.out.println(<span class="fn">padKanan</span>(<span class="st">"Biaya Pelayanan"</span>, <span class="nm">34</span>) + <span class="st">": Rp "</span> + layanan);
+<span class="ln">120</span>        System.out.println(<span class="fn">padKanan</span>(<span class="st">"Subtotal Setelah Pajak"</span>, <span class="nm">34</span>) + <span class="st">": Rp "</span> + subtotal);
+<span class="ln">121</span>
+<span class="ln">122</span>        <span class="ty">int</span> diskon = <span class="nm">0</span>;
+<span class="ln">123</span>        <span class="kw">if</span> (total &gt; <span class="nm">100000</span>) {
+<span class="ln">124</span>            diskon = (<span class="ty">int</span>) Math.<span class="fn">round</span>(subtotal * <span class="nm">0.10</span>);
+<span class="ln">125</span>            System.out.println(<span class="fn">padKanan</span>(<span class="st">"Diskon 10% (Total &gt; Rp 100.000)"</span>, <span class="nm">34</span>) + <span class="st">": Rp "</span> + diskon);
+<span class="ln">126</span>        }
+<span class="ln">127</span>
+<span class="ln">128</span>        <span class="ty">int</span> potonganBogo = <span class="nm">0</span>;
+<span class="ln">129</span>        <span class="kw">if</span> (total &gt; <span class="nm">50000</span>) {
+<span class="ln">130</span>            <span class="ty">int</span> idxMinuman = <span class="fn">cariIndexMinuman</span>();
+<span class="ln">131</span>            <span class="kw">if</span> (idxMinuman != -<span class="nm">1</span>) {
+<span class="ln">132</span>                potonganBogo = pesananHarga[idxMinuman];
+<span class="ln">133</span>                <span class="ty">String</span> infoBogo = <span class="st">"Beli 1 Gratis 1: "</span> + pesananNama[idxMinuman];
+<span class="ln">134</span>                System.out.println(<span class="fn">padKanan</span>(infoBogo, <span class="nm">34</span>) + <span class="st">": Rp "</span> + potonganBogo);
+<span class="ln">135</span>            } <span class="kw">else</span> {
+<span class="ln">136</span>                System.out.println(<span class="st">"Promo Beli 1 Gratis 1 minuman tersedia,"</span>);
+<span class="ln">137</span>                System.out.println(<span class="st">"namun tidak ada minuman pada pesanan Anda."</span>);
+<span class="ln">138</span>            }
+<span class="ln">139</span>        }
+<span class="ln">140</span>
+<span class="ln">141</span>        <span class="ty">int</span> totalAkhir = subtotal - diskon - potonganBogo;
+<span class="ln">142</span>        <span class="kw">if</span> (totalAkhir &lt; <span class="nm">0</span>) totalAkhir = <span class="nm">0</span>;
+<span class="ln">143</span>        System.out.println(<span class="st">"---------------------------------------------------------"</span>);
+<span class="ln">144</span>        System.out.println(<span class="fn">padKanan</span>(<span class="st">"TOTAL PEMBAYARAN"</span>, <span class="nm">34</span>) + <span class="st">": Rp "</span> + totalAkhir);
+<span class="ln">145</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">146</span>        System.out.println(<span class="st">"        Terima kasih atas kunjungan Anda :)              "</span>);
+<span class="ln">147</span>        System.out.println(<span class="st">"========================================================="</span>);
+<span class="ln">148</span>    }
+<span class="ln">149</span>
+<span class="ln">150</span>    <span class="kw">static int</span> <span class="fn">cetakBaris</span>(<span class="ty">int</span> i) {
+<span class="ln">151</span>        <span class="ty">int</span> sub = pesananHarga[i] * pesananJumlah[i];
+<span class="ln">152</span>        System.out.println(
+<span class="ln">153</span>                <span class="fn">padKanan</span>(pesananNama[i], <span class="nm">16</span>) +
+<span class="ln">154</span>                <span class="fn">padKanan</span>(<span class="ty">String</span>.<span class="fn">valueOf</span>(pesananJumlah[i]), <span class="nm">6</span>) +
+<span class="ln">155</span>                <span class="fn">padKanan</span>(<span class="st">"Rp "</span> + pesananHarga[i], <span class="nm">12</span>) +
+<span class="ln">156</span>                <span class="st">"Rp "</span> + sub);
+<span class="ln">157</span>        <span class="kw">return</span> sub;
+<span class="ln">158</span>    }
+<span class="ln">159</span>
+<span class="ln">160</span>    <span class="kw">static int</span> <span class="fn">cariIndexMinuman</span>() {
+<span class="ln">161</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">1</span> &amp;&amp; <span class="st">"Minuman"</span>.<span class="fn">equals</span>(pesananKategori[<span class="nm">0</span>])) <span class="kw">return</span> <span class="nm">0</span>;
+<span class="ln">162</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">2</span> &amp;&amp; <span class="st">"Minuman"</span>.<span class="fn">equals</span>(pesananKategori[<span class="nm">1</span>])) <span class="kw">return</span> <span class="nm">1</span>;
+<span class="ln">163</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">3</span> &amp;&amp; <span class="st">"Minuman"</span>.<span class="fn">equals</span>(pesananKategori[<span class="nm">2</span>])) <span class="kw">return</span> <span class="nm">2</span>;
+<span class="ln">164</span>        <span class="kw">if</span> (jumlahPesanan &gt;= <span class="nm">4</span> &amp;&amp; <span class="st">"Minuman"</span>.<span class="fn">equals</span>(pesananKategori[<span class="nm">3</span>])) <span class="kw">return</span> <span class="nm">3</span>;
+<span class="ln">165</span>        <span class="kw">return</span> -<span class="nm">1</span>;
+<span class="ln">166</span>    }
+<span class="ln">167</span>
+<span class="ln">168</span>    <span class="kw">static</span> <span class="ty">String</span> <span class="fn">padKanan</span>(<span class="ty">String</span> teks, <span class="ty">int</span> lebar) {
+<span class="ln">169</span>        <span class="kw">return</span> <span class="ty">String</span>.<span class="fn">format</span>(<span class="st">"%-"</span> + lebar + <span class="st">"s"</span>, teks);
+<span class="ln">170</span>    }
+<span class="ln">171</span>}
+</pre>
+  </div>
+
+  <div class="page-footer">
+    <span class="left"><i class="fa-solid fa-graduation-cap"></i>Tugas 1 — Pemrograman Berbasis Desktop</span>
+    <span class="right">ALINA · 055007898 <span class="pn">03</span></span>
+  </div>
+</section>
+
+
+<!-- ============ HALAMAN 4 : HASIL OUTPUT ============ -->
+<section class="page">
+  <div class="page-header">
+    <h2><i class="fa-solid fa-terminal"></i>Hasil Eksekusi Program</h2>
+    <span class="badge"><i class="fa-solid fa-circle-play"></i>CONSOLE OUTPUT</span>
+  </div>
+
+  <div class="section-title"><i class="fa-solid fa-flask-vial"></i>Skenario Pengujian</div>
+  <p class="desc">
+    Program dijalankan dengan skenario pemesanan sebagai berikut: pelanggan memesan
+    <strong>3 porsi Ayam Bakar</strong>, <strong>4 gelas Es Teh Manis</strong>,
+    <strong>1 botol Air Mineral</strong>, dan slot ke-4 dilewati. Total pesanan
+    melebihi Rp 100.000 sehingga sistem secara otomatis menerapkan diskon 10%
+    dan promo Beli 1 Gratis 1 untuk minuman pertama yang dipesan.
+  </p>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="file"><i class="fa-solid fa-terminal"></i>java Tugas1</span>
+    </div>
+<pre class="output"><span class="out-h">=========================================================
+              DAFTAR MENU RESTORAN SEDERHANA
+=========================================================</span>
+<span class="out-y">&gt;&gt; KATEGORI MAKANAN &lt;&lt;</span>
+  1. Nasi Pecel          Rp 15000
+  2. Soto Ayam           Rp 20000
+  3. Soto Daging         Rp 25000
+  4. Ayam Bakar          Rp 25000
+
+<span class="out-y">&gt;&gt; KATEGORI MINUMAN &lt;&lt;</span>
+  5. Air Mineral         Rp 5000
+  6. Teh Panas           Rp 6000
+  7. Kopi                Rp 8000
+  8. Es Teh Manis        Rp 8000
+<span class="out-h">=========================================================
+
+=========================================================
+            INPUT PESANAN (Maksimal 4 Menu)
+=========================================================</span>
+Ketik 0 pada nomor menu jika ingin melewati slot pesanan.
+
+Pesanan ke-1 | Pilih nomor menu (1-8, 0=lewati): <span class="out-input">4</span>
+Pesanan ke-1 | Masukkan jumlah         : <span class="out-input">3</span>
+Pesanan ke-2 | Pilih nomor menu (1-8, 0=lewati): <span class="out-input">8</span>
+Pesanan ke-2 | Masukkan jumlah         : <span class="out-input">4</span>
+Pesanan ke-3 | Pilih nomor menu (1-8, 0=lewati): <span class="out-input">5</span>
+Pesanan ke-3 | Masukkan jumlah         : <span class="out-input">1</span>
+Pesanan ke-4 | Pilih nomor menu (1-8, 0=lewati): <span class="out-input">0</span>
+  -&gt; Slot dilewati.
+
+<span class="out-h">=========================================================
+                 STRUK PESANAN RESTORAN
+=========================================================</span>
+Menu            Qty   Harga       Subtotal
+---------------------------------------------------------
+Ayam Bakar      3     Rp 25000    Rp 75000
+Es Teh Manis    4     Rp 8000     Rp 32000
+Air Mineral     1     Rp 5000     Rp 5000
+---------------------------------------------------------
+Total Biaya Pesanan               : Rp 112000
+Pajak (10%)                       : Rp 11200
+Biaya Pelayanan                   : Rp 20000
+Subtotal Setelah Pajak            : Rp 143200
+<span class="out-g">Diskon 10% (Total &gt; Rp 100.000)   : Rp 14320
+Beli 1 Gratis 1: Es Teh Manis     : Rp 8000</span>
+---------------------------------------------------------
+<span class="out-y">TOTAL PEMBAYARAN                  : Rp 120880</span>
+<span class="out-h">=========================================================</span>
+        Terima kasih atas kunjungan Anda :)
+<span class="out-h">=========================================================</span>
+</pre>
+  </div>
+
+  <div class="section-title" style="margin-top:6mm"><i class="fa-solid fa-chart-line"></i>Analisis Hasil</div>
+  <p class="desc">
+    Berdasarkan output di atas, program berhasil menjalankan seluruh fitur:
+    (1) menampilkan daftar menu, (2) menerima input pesanan dengan validasi,
+    (3) menghitung subtotal per item, (4) menerapkan pajak 10% dan biaya pelayanan,
+    (5) memberikan diskon 10% karena total &gt; Rp 100.000, dan (6) memberikan
+    promo Beli 1 Gratis 1 untuk minuman pertama. Total akhir yang dibayar pelanggan
+    adalah <strong>Rp 120.880</strong>.
+  </p>
+
+  <!-- YOUTUBE LINK BUTTON -->
+  <div class="yt-section">
+    <h3><i class="fa-brands fa-youtube"></i>Video Demonstrasi Program</h3>
+    <p class="sub">Klik tombol di bawah untuk menyaksikan demonstrasi penjelasan program secara langsung.</p>
+    <a class="yt-btn" href="https://youtu.be/VXuiXI7b3EQ" target="_blank" rel="noopener">
+      <i class="fa-brands fa-youtube"></i>
+      Tonton di YouTube
+      <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11pt"></i>
+    </a>
+    <div class="yt-url">
+      <i class="fa-solid fa-link" style="margin-right:4px"></i>
+      <a href="https://youtu.be/VXuiXI7b3EQ" target="_blank">https://youtu.be/VXuiXI7b3EQ</a>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="left"><i class="fa-solid fa-graduation-cap"></i>Tugas 1 — Pemrograman Berbasis Desktop</span>
+    <span class="right">ALINA · 055007898 <span class="pn">04</span></span>
+  </div>
+</section>
+
+</body>
+</html>
